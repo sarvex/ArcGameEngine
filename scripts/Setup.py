@@ -12,11 +12,11 @@ else:
     print("Invalid syntax, should only contain one argument: msvc/clang/llvm")
     exit
 
-if compiler != "msvc" and compiler != "clang" and compiler != "llvm":
+if compiler not in ["msvc", "clang", "llvm"]:
     print("Invalid compiler:", compiler)
     exit
 
-if compiler == "clang" or compiler == "llvm":
+if compiler in ["clang", "llvm"]:
     os.system("GenerateSolutionClang.bat")
 else:
     os.system("GenerateSolution.bat")
@@ -33,8 +33,7 @@ if compiler == "llvm":
             extension = pathlib.Path(fpath).suffix
             if extension != ".vcxproj":
                 continue
-            with open(fpath) as f:
-                s = f.read()
+            s = pathlib.Path(fpath).read_text()
             s = s.replace("<PlatformToolset>ClangCL</PlatformToolset>", "<PlatformToolset>LLVM_v143</PlatformToolset>")
             with open(fpath, "w") as f:
                 f.write(s)
